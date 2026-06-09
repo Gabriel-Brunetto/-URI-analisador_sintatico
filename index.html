@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Analisador Sintático LL(1)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <h1>Analisador Sintático - Compiladores T2023</h1>
+  <h3>Gabriel Brunetto & Eduardo Ongaratto</h3>
+
+  <!-- GRAMÁTICA -->
+  <section class="card">
+    <h2>Gramática</h2>
+    <table>
+      <tr><th>Regra</th><th>Produções</th></tr>
+      <tr><td>E</td><td>E → T E'</td></tr>
+      <tr><td>E'</td><td>E' → + T E' &nbsp;|&nbsp; ε</td></tr>
+      <tr><td>T</td><td>T → F T'</td></tr>
+      <tr><td>T'</td><td>T' → * F T' &nbsp;|&nbsp; ε</td></tr>
+      <tr><td>F</td><td>F → ( E ) &nbsp;|&nbsp; id</td></tr>
+    </table>
+  </section>
+
+  <!-- FIRST E FOLLOW -->
+  <section class="card">
+    <h2>Conjuntos FIRST e FOLLOW</h2>
+    <table>
+      <tr><th>Não-Terminal</th><th>FIRST</th><th>FOLLOW</th></tr>
+      <tr><td>E</td><td>{ (, id }</td><td>{ ), $ }</td></tr>
+      <tr><td>E'</td><td>{ +, ε }</td><td>{ ), $ }</td></tr>
+      <tr><td>T</td><td>{ (, id }</td><td>{ +, ), $ }</td></tr>
+      <tr><td>T'</td><td>{ *, ε }</td><td>{ +, ), $ }</td></tr>
+      <tr><td>F</td><td>{ (, id }</td><td>{ *, +, ), $ }</td></tr>
+    </table>
+  </section>
+
+  <!-- TABELA DE PARSING -->
+  <section class="card">
+    <h2>Tabela de Parsing</h2>
+    <div class="table-scroll">
+      <table>
+        <tr>
+          <th>NT \ T</th>
+          <th>id</th>
+          <th>+</th>
+          <th>*</th>
+          <th>(</th>
+          <th>)</th>
+          <th>$</th>
+        </tr>
+        <tr>
+          <td><strong>E</strong></td>
+          <td>E → T E'</td>
+          <td></td>
+          <td></td>
+          <td>E → T E'</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td><strong>E'</strong></td>
+          <td></td>
+          <td>E' → + T E'</td>
+          <td></td>
+          <td></td>
+          <td>E' → ε</td>
+          <td>E' → ε</td>
+        </tr>
+        <tr>
+          <td><strong>T</strong></td>
+          <td>T → F T'</td>
+          <td></td>
+          <td></td>
+          <td>T → F T'</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td><strong>T'</strong></td>
+          <td></td>
+          <td>T' → ε</td>
+          <td>T' → * F T'</td>
+          <td></td>
+          <td>T' → ε</td>
+          <td>T' → ε</td>
+        </tr>
+        <tr>
+          <td><strong>F</strong></td>
+          <td>F → id</td>
+          <td></td>
+          <td></td>
+          <td>F → ( E )</td>
+          <td></td>
+          <td></td>
+        </tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- ENTRADA -->
+  <section class="card">
+    <h2>Sentença</h2>
+    <p class="hint">
+      Tokens válidos: <code>id</code>, <code>+</code>, <code>*</code>, <code>(</code>, <code>)</code><br>
+      Separe os tokens por espaço. Exemplo: <code>id + id * id</code>
+    </p>
+    <div class="entrada-row">
+      <input type="text" id="inputSentenca" placeholder="Ex: id + id * id" />
+      <button onclick="analisar()">Analisar</button>
+      <button onclick="gerarSentenca()">Gerar Sentença</button>
+      <button onclick="reiniciar()">Reiniciar</button>
+    </div>
+  </section>
+
+  <!-- PASSOS DA PILHA -->
+  <section class="card" id="secaoPassos" style="display:none">
+    <h2>Passos da Análise</h2>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Pilha</th>
+            <th>Entrada Restante</th>
+            <th>Ação</th>
+          </tr>
+        </thead>
+        <tbody id="tabelaPassos"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- RESULTADO -->
+  <div id="resultado"></div>
+
+  <script src="index.js"></script>
+</body>
+</html>

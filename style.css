@@ -1,0 +1,182 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-image: url(https://wallpapers.com/images/hd/programming-hd-sislngfkgwo7yset.jpg);
+  color: #222;
+  padding: 24px;
+}
+
+h1 {
+  text-align: center;
+  font-size: 26px;
+  margin-bottom: 24px;
+  color: #ffffff;
+}
+
+h2 {
+  font-size: 17px;
+  margin-bottom: 14px;
+  color: #1a1a2e;
+  border-left: 4px solid #4a90d9;
+  border-right: 4px solid #4a90d9;
+  text-align: center;
+  padding-left: 10px;
+}
+
+h3 {
+  text-align: center;
+  font-size: 16px;
+  margin-bottom: 24px;
+  color: #ffffff;
+}
+
+.card {
+  background: #ffffffed;
+  border-radius: 8px;
+  border: 1px solid #dde3ea;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* TABELAS */
+.table-scroll {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+th {
+  background: #1a1a2e;
+  color: #fff;
+  padding: 8px 12px;
+  text-align: center;
+}
+
+td {
+  border: 1px solid #dde3ea;
+  padding: 7px 12px;
+  text-align: center;
+}
+
+tr:nth-child(even) td {
+  background: #f7f9fc;
+}
+
+/* ENTRADA */
+.hint {
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 12px;
+  line-height: 1.6;
+}
+
+.hint code {
+  background: #eef2f7;
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 13px;
+}
+
+.entrada-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+input[type="text"] {
+  flex: 1;
+  min-width: 220px;
+  padding: 9px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+  font-family: monospace;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: #4a90d9;
+}
+
+button {
+  padding: 9px 18px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  background: #4a90d9;
+  color: #fff;
+  transition: background 0.2s;
+}
+
+button:hover {
+  background: #2c6fad;
+}
+
+button:last-child {
+  background: #888;
+}
+
+button:last-child:hover {
+  background: #555;
+}
+
+/* TABELA DE PASSOS */
+#tabelaPassos td:nth-child(1) {
+  width: 40px;
+  color: #888;
+  font-size: 13px;
+}
+
+#tabelaPassos td:nth-child(2),
+#tabelaPassos td:nth-child(3) {
+  font-family: monospace;
+  font-size: 13px;
+  text-align: left;
+}
+
+#tabelaPassos td:nth-child(4) {
+  font-size: 13px;
+  color: #333;
+  text-align: left;
+}
+
+/* RESULTADO */
+#resultado {
+  max-width: 900px;
+  margin: 0 auto 20px auto;
+  padding: 16px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  display: none;
+}
+
+#resultado.aceito {
+  display: block;
+  background: #d4edda;
+  border: 1px solid #4caf50;
+  color: #1b5e20;
+}
+
+#resultado.rejeitado {
+  display: block;
+  background: #fde8e8;
+  border: 1px solid #e53935;
+  color: #7f0000;
+}
