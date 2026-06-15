@@ -1,140 +1,363 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Analisador Sintático LL(1)</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analisador Sintático LL(1) - Compiladores</title>
+
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <h1>Analisador Sintático - Compiladores T2023</h1>
-  <h3>Gabriel Brunetto & Eduardo Ongaratto</h3>
+    <!-- CABEÇALHO -->
+    <header class="header">
+        <div class="header-content">
+            <h1>Analisador Sintático LL(1)</h1>
 
-  <!-- GRAMÁTICA -->
-  <section class="card">
-    <h2>Gramática</h2>
-    <table>
-      <tr><th>Regra</th><th>Produções</th></tr>
-      <tr><td>E</td><td>E → T E'</td></tr>
-      <tr><td>E'</td><td>E' → + T E' &nbsp;|&nbsp; ε</td></tr>
-      <tr><td>T</td><td>T → F T'</td></tr>
-      <tr><td>T'</td><td>T' → * F T' &nbsp;|&nbsp; ε</td></tr>
-      <tr><td>F</td><td>F → ( E ) &nbsp;|&nbsp; id</td></tr>
-    </table>
-  </section>
+            <p class="subtitulo">
+                Trabalho Discente Efetivo(TDE) - Compiladores
+            </p>
 
-  <!-- FIRST E FOLLOW -->
-  <section class="card">
-    <h2>Conjuntos FIRST e FOLLOW</h2>
-    <table>
-      <tr><th>Não-Terminal</th><th>FIRST</th><th>FOLLOW</th></tr>
-      <tr><td>E</td><td>{ (, id }</td><td>{ ), $ }</td></tr>
-      <tr><td>E'</td><td>{ +, ε }</td><td>{ ), $ }</td></tr>
-      <tr><td>T</td><td>{ (, id }</td><td>{ +, ), $ }</td></tr>
-      <tr><td>T'</td><td>{ *, ε }</td><td>{ +, ), $ }</td></tr>
-      <tr><td>F</td><td>{ (, id }</td><td>{ *, +, ), $ }</td></tr>
-    </table>
-  </section>
+            <p class="autores">
+                Gabriel Brunetto & Eduardo Ongaratto
+            </p>
+        </div>
+    </header>
 
-  <!-- TABELA DE PARSING -->
-  <section class="card">
-    <h2>Tabela de Parsing</h2>
-    <div class="table-scroll">
-      <table>
-        <tr>
-          <th>NT \ T</th>
-          <th>id</th>
-          <th>+</th>
-          <th>*</th>
-          <th>(</th>
-          <th>)</th>
-          <th>$</th>
-        </tr>
-        <tr>
-          <td><strong>E</strong></td>
-          <td>E → T E'</td>
-          <td></td>
-          <td></td>
-          <td>E → T E'</td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td><strong>E'</strong></td>
-          <td></td>
-          <td>E' → + T E'</td>
-          <td></td>
-          <td></td>
-          <td>E' → ε</td>
-          <td>E' → ε</td>
-        </tr>
-        <tr>
-          <td><strong>T</strong></td>
-          <td>T → F T'</td>
-          <td></td>
-          <td></td>
-          <td>T → F T'</td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td><strong>T'</strong></td>
-          <td></td>
-          <td>T' → ε</td>
-          <td>T' → * F T'</td>
-          <td></td>
-          <td>T' → ε</td>
-          <td>T' → ε</td>
-        </tr>
-        <tr>
-          <td><strong>F</strong></td>
-          <td>F → id</td>
-          <td></td>
-          <td></td>
-          <td>F → ( E )</td>
-          <td></td>
-          <td></td>
-        </tr>
-      </table>
-    </div>
-  </section>
+    <!-- GRAMÁTICA -->
+    <section class="card">
 
-  <!-- ENTRADA -->
-  <section class="card">
-    <h2>Sentença</h2>
-    <p class="hint">
-      Tokens válidos: <code>id</code>, <code>+</code>, <code>*</code>, <code>(</code>, <code>)</code><br>
-      Separe os tokens por espaço. Exemplo: <code>id + id * id</code>
-    </p>
-    <div class="entrada-row">
-      <input type="text" id="inputSentenca" placeholder="Ex: id + id * id" />
-      <button onclick="analisar()">Analisar</button>
-      <button onclick="gerarSentenca()">Gerar Sentença</button>
-      <button onclick="reiniciar()">Reiniciar</button>
-    </div>
-  </section>
+        <h2>Gramática LL(1)</h2>
 
-  <!-- PASSOS DA PILHA -->
-  <section class="card" id="secaoPassos" style="display:none">
-    <h2>Passos da Análise</h2>
-    <div class="table-scroll">
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Pilha</th>
-            <th>Entrada Restante</th>
-            <th>Ação</th>
-          </tr>
-        </thead>
-        <tbody id="tabelaPassos"></tbody>
-      </table>
-    </div>
-  </section>
+        <div class="gramatica-container">
 
-  <!-- RESULTADO -->
-  <div id="resultado"></div>
+            <div class="gramatica-item">
+                <strong>E</strong> → T E'
+            </div>
 
-  <script src="index.js"></script>
+            <div class="gramatica-item">
+                <strong>E'</strong> → + T E' | ε
+            </div>
+
+            <div class="gramatica-item">
+                <strong>T</strong> → F T'
+            </div>
+
+            <div class="gramatica-item">
+                <strong>T'</strong> → * F T' | ε
+            </div>
+
+            <div class="gramatica-item">
+                <strong>F</strong> → ( E ) | id
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- FIRST E FOLLOW -->
+    <section class="card">
+
+        <h2>Conjuntos FIRST e FOLLOW</h2>
+
+        <div class="table-scroll">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Não Terminal</th>
+                        <th>FIRST</th>
+                        <th>FOLLOW</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>E</td>
+                        <td>{ (, id }</td>
+                        <td>{ ), $ }</td>
+                    </tr>
+
+                    <tr>
+                        <td>E'</td>
+                        <td>{ +, ε }</td>
+                        <td>{ ), $ }</td>
+                    </tr>
+
+                    <tr>
+                        <td>T</td>
+                        <td>{ (, id }</td>
+                        <td>{ +, ), $ }</td>
+                    </tr>
+
+                    <tr>
+                        <td>T'</td>
+                        <td>{ *, ε }</td>
+                        <td>{ +, ), $ }</td>
+                    </tr>
+
+                    <tr>
+                        <td>F</td>
+                        <td>{ (, id }</td>
+                        <td>{ *, +, ), $ }</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+    <!-- TABELA DE PARSING -->
+    <section class="card">
+
+        <h2>Tabela de Parsing LL(1)</h2>
+
+        <div class="table-scroll">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>NT \ T</th>
+                        <th>id</th>
+                        <th>+</th>
+                        <th>*</th>
+                        <th>(</th>
+                        <th>)</th>
+                        <th>$</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td><strong>E</strong></td>
+                        <td>E → T E'</td>
+                        <td></td>
+                        <td></td>
+                        <td>E → T E'</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>E'</strong></td>
+                        <td></td>
+                        <td>E' → + T E'</td>
+                        <td></td>
+                        <td></td>
+                        <td>E' → ε</td>
+                        <td>E' → ε</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>T</strong></td>
+                        <td>T → F T'</td>
+                        <td></td>
+                        <td></td>
+                        <td>T → F T'</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>T'</strong></td>
+                        <td></td>
+                        <td>T' → ε</td>
+                        <td>T' → * F T'</td>
+                        <td></td>
+                        <td>T' → ε</td>
+                        <td>T' → ε</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>F</strong></td>
+                        <td>F → id</td>
+                        <td></td>
+                        <td></td>
+                        <td>F → ( E )</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+    <!-- EXEMPLOS -->
+    <section class="card">
+
+        <h2>Exemplos de Sentenças</h2>
+
+        <div class="exemplos">
+
+            <div class="exemplo-valido">
+
+                <h3>Sentenças Válidas</h3>
+
+                <ul>
+                    <li>id</li>
+                    <li>id + id</li>
+                    <li>id * id</li>
+                    <li>( id )</li>
+                    <li>( id + id )</li>
+                    <li>id + id * id</li>
+                    <li>( id + id ) * id</li>
+                </ul>
+
+            </div>
+
+            <div class="exemplo-invalido">
+
+                <h3>Sentenças Inválidas</h3>
+
+                <ul>
+                    <li>+</li>
+                    <li>* id</li>
+                    <li>id +</li>
+                    <li>( id</li>
+                    <li>id )</li>
+                    <li>id * + id</li>
+                </ul>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ENTRADA -->
+    <section class="card">
+
+        <h2>Análise de Sentença</h2>
+
+        <p class="hint">
+            Digite uma sentença utilizando os tokens:
+            <code>id</code>,
+            <code>+</code>,
+            <code>*</code>,
+            <code>(</code>,
+            <code>)</code>
+        </p>
+
+        <p class="hint">
+            Exemplo:
+            <code>id + id * id</code>
+        </p>
+
+        <div class="entrada-row">
+
+            <input
+                type="text"
+                id="inputSentenca"
+                placeholder="Digite uma sentença..."
+            >
+
+            <button onclick="analisar()">
+                Analisar
+            </button>
+
+            <button onclick="gerarSentenca()">
+                Gerar Sentença
+            </button>
+
+            <button onclick="reiniciar()">
+                Reiniciar
+            </button>
+
+        </div>
+
+    </section>
+
+    <!-- ESTATÍSTICAS -->
+    <section
+        class="card"
+        id="estatisticas"
+        style="display:none;"
+    >
+
+        <h2>Estatísticas da Análise</h2>
+
+        <div class="stats-grid">
+
+            <div class="stat-box">
+                <span class="stat-numero" id="qtTokens">0</span>
+                <span class="stat-label">Tokens</span>
+            </div>
+
+            <div class="stat-box">
+                <span class="stat-numero" id="qtPassos">0</span>
+                <span class="stat-label">Passos</span>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- RESULTADO -->
+    <div id="resultado"></div>
+
+    <!-- PASSOS -->
+    <section
+        class="card"
+        id="secaoPassos"
+        style="display:none;"
+    >
+
+        <h2>
+            Passos da Análise
+        </h2>
+
+        <div class="table-scroll">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>#</th>
+                        <th>Pilha</th>
+                        <th>Entrada Restante</th>
+                        <th>Ação</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="tabelaPassos">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+    <!-- RODAPÉ -->
+    <footer class="footer">
+
+        <p>
+            Universidade Regional Integrada do Alto Uruguai e das Missões
+        </p>
+
+        <p>
+            Disciplina de Compiladores - 2026
+        </p>
+
+    </footer>
+
+    <script src="parser.js"></script>
+
 </body>
 </html>
